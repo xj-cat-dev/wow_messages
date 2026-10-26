@@ -89,8 +89,7 @@ smsg SMSG_AUCTION_BIDDER_NOTIFICATION = 0x025E {
     u32 auction_id;
     Guid bidder;
     u32 bid_sum;
-    u32 new_highest_bid;
-    u32 out_bid_amount;
+    u32 minimum_increment;
     u32 item_template;
     u32 item_random_property_id;
 }
@@ -114,8 +113,22 @@ SMSG have a header of 4 bytes.
 | 0x08 | 4 / Little | u32 | auction_id |  |
 | 0x0C | 8 / Little | [Guid](../types/packed-guid.md) | bidder |  |
 | 0x14 | 4 / Little | u32 | bid_sum |  |
-| 0x18 | 4 / Little | u32 | new_highest_bid |  |
-| 0x1C | 4 / Little | u32 | out_bid_amount |  |
-| 0x20 | 4 / Little | u32 | item_template |  |
-| 0x24 | 4 / Little | u32 | item_random_property_id |  |
+| 0x18 | 4 / Little | u32 | minimum_increment |  |
+| 0x1C | 4 / Little | u32 | item_template |  |
+| 0x20 | 4 / Little | u32 | item_random_property_id |  |
 
+### Examples
+
+#### Example 1
+
+```c
+0, 34, // size
+94, 2, // opcode (606)
+1, 0, 0, 0, // auction_house: AuctionHouse STORMWIND (1)
+42, 0, 0, 0, // auction_id: u32
+8, 7, 6, 5, 4, 3, 2, 1, // bidder: Guid
+16, 39, 0, 0, // bid_sum: u32
+244, 1, 0, 0, // minimum_increment: u32
+36, 27, 0, 0, // item_template: u32
+0, 0, 0, 0, // item_random_property_id: u32
+```

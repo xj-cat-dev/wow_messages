@@ -7964,7 +7964,7 @@ pub enum ServerOpcodeMessage {
     SMSG_FORCE_TURN_RATE_CHANGE(Box<SMSG_FORCE_TURN_RATE_CHANGE>),
     SMSG_AREA_SPIRIT_HEALER_TIME(Box<SMSG_AREA_SPIRIT_HEALER_TIME>),
     SMSG_WARDEN_DATA(Box<SMSG_WARDEN_DATA>),
-    SMSG_GROUP_JOINED_BATTLEGROUND(SMSG_GROUP_JOINED_BATTLEGROUND),
+    SMSG_GROUP_JOINED_BATTLEGROUND(Box<SMSG_GROUP_JOINED_BATTLEGROUND>),
     MSG_BATTLEGROUND_PLAYER_POSITIONS(Box<MSG_BATTLEGROUND_PLAYER_POSITIONS_Server>),
     SMSG_BINDER_CONFIRM(Box<SMSG_BINDER_CONFIRM>),
     SMSG_BATTLEGROUND_PLAYER_JOINED(SMSG_BATTLEGROUND_PLAYER_JOINED),
@@ -8488,7 +8488,7 @@ impl ServerOpcodeMessage {
             0x02DE => Ok(Self::SMSG_FORCE_TURN_RATE_CHANGE(Box::new(<SMSG_FORCE_TURN_RATE_CHANGE as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?))),
             0x02E4 => Ok(Self::SMSG_AREA_SPIRIT_HEALER_TIME(Box::new(<SMSG_AREA_SPIRIT_HEALER_TIME as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?))),
             0x02E6 => Ok(Self::SMSG_WARDEN_DATA(Box::new(<SMSG_WARDEN_DATA as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?))),
-            0x02E8 => Ok(Self::SMSG_GROUP_JOINED_BATTLEGROUND(<SMSG_GROUP_JOINED_BATTLEGROUND as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?)),
+            0x02E8 => Ok(Self::SMSG_GROUP_JOINED_BATTLEGROUND(Box::new(<SMSG_GROUP_JOINED_BATTLEGROUND as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?))),
             0x02E9 => Ok(Self::MSG_BATTLEGROUND_PLAYER_POSITIONS(Box::new(<MSG_BATTLEGROUND_PLAYER_POSITIONS_Server as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?))),
             0x02EB => Ok(Self::SMSG_BINDER_CONFIRM(Box::new(<SMSG_BINDER_CONFIRM as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?))),
             0x02EC => Ok(Self::SMSG_BATTLEGROUND_PLAYER_JOINED(<SMSG_BATTLEGROUND_PLAYER_JOINED as crate::Message>::read_body::<crate::traits::private::Internal>(&mut r, body_size).map_err(|a| a.opcode_convert())?)),
@@ -12109,7 +12109,6 @@ impl ServerOpcodeMessage {
             Self::SMSG_TRADE_STATUS(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_TRADE_STATUS_EXTENDED(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_INITIALIZE_FACTIONS(c) => crate::Message::to_test_case_string(c.as_ref()),
-            Self::SMSG_SET_FACTION_VISIBLE(c) => crate::Message::to_test_case_string(c),
             Self::SMSG_SET_FACTION_STANDING(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_SET_PROFICIENCY(c) => crate::Message::to_test_case_string(c),
             Self::SMSG_ACTION_BUTTONS(c) => crate::Message::to_test_case_string(c.as_ref()),
@@ -12252,7 +12251,6 @@ impl ServerOpcodeMessage {
             Self::SMSG_AUCTION_COMMAND_RESULT(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_AUCTION_LIST_RESULT(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_AUCTION_OWNER_LIST_RESULT(c) => crate::Message::to_test_case_string(c.as_ref()),
-            Self::SMSG_AUCTION_BIDDER_NOTIFICATION(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_AUCTION_OWNER_NOTIFICATION(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_PROCRESIST(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_DISPEL_FAILED(c) => crate::Message::to_test_case_string(c.as_ref()),
@@ -12310,7 +12308,6 @@ impl ServerOpcodeMessage {
             Self::SMSG_FORCE_TURN_RATE_CHANGE(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_AREA_SPIRIT_HEALER_TIME(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_WARDEN_DATA(c) => crate::Message::to_test_case_string(c.as_ref()),
-            Self::SMSG_GROUP_JOINED_BATTLEGROUND(c) => crate::Message::to_test_case_string(c),
             Self::MSG_BATTLEGROUND_PLAYER_POSITIONS(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_BINDER_CONFIRM(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_BATTLEGROUND_PLAYER_JOINED(c) => crate::Message::to_test_case_string(c),
@@ -12319,7 +12316,6 @@ impl ServerOpcodeMessage {
             Self::SMSG_PET_UNLEARN_CONFIRM(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_PARTY_MEMBER_STATS_FULL(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_WEATHER(c) => crate::Message::to_test_case_string(c.as_ref()),
-            Self::SMSG_RAID_INSTANCE_MESSAGE(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_COMPRESSED_MOVES(c) => crate::Message::to_test_case_string(c.as_ref()),
             Self::SMSG_CHAT_RESTRICTED(c) => crate::Message::to_test_case_string(c),
             Self::SMSG_SPLINE_SET_RUN_BACK_SPEED(c) => crate::Message::to_test_case_string(c.as_ref()),
@@ -15441,7 +15437,7 @@ impl From<SMSG_WARDEN_DATA> for ServerOpcodeMessage {
 
 impl From<SMSG_GROUP_JOINED_BATTLEGROUND> for ServerOpcodeMessage {
     fn from(c: SMSG_GROUP_JOINED_BATTLEGROUND) -> Self {
-        Self::SMSG_GROUP_JOINED_BATTLEGROUND(c)
+        Self::SMSG_GROUP_JOINED_BATTLEGROUND(Box::new(c))
     }
 }
 

@@ -1,7 +1,22 @@
 smsg SMSG_SET_FACTION_VISIBLE = 0x0123 {
     Faction faction;
 } {
-    paste_versions = "1.12 2.4.3 3.3.5";
+    paste_versions = "1.12 2.4.3";
 }
 
+smsg SMSG_SET_FACTION_VISIBLE = 0x0123 {
+    /// Index into the client's reputation list, not a faction ID.
+    u32 reputation_list_id;
+} {
+    versions = "3.3.5";
+}
 
+test SMSG_SET_FACTION_VISIBLE {
+    reputation_list_id = 5;
+} [
+    0x00, 0x06, /* size */
+    0x23, 0x01, /* opcode */
+    0x05, 0x00, 0x00, 0x00, /* reputation_list_id */
+] {
+    versions = "3.3.5";
+}

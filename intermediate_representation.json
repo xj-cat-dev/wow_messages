@@ -112697,17 +112697,129 @@
             "tags": {}
           },
           {
-            "name": "REMOVE_FROM_QUEUE",
+            "name": "ERR_BATTLEGROUND_NONE",
             "value": {
-              "value": "4294967294",
-              "original_string": "0xFFFFFFFE"
+              "value": "-1",
+              "original_string": "-1"
             },
             "tags": {
-              "comment": "send bg command result to show nice message"
+              "comment": "Do not show a message."
             }
+          },
+          {
+            "name": "ERR_GROUP_JOIN_BATTLEGROUND_DESERTERS",
+            "value": {
+              "value": "-2",
+              "original_string": "-2"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_ARENA_TEAM_PARTY_SIZE",
+            "value": {
+              "value": "-3",
+              "original_string": "-3"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_TOO_MANY_QUEUES",
+            "value": {
+              "value": "-4",
+              "original_string": "-4"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_CANNOT_QUEUE_FOR_RATED",
+            "value": {
+              "value": "-5",
+              "original_string": "-5"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_QUEUED_FOR_RATED",
+            "value": {
+              "value": "-6",
+              "original_string": "-6"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_TEAM_LEFT_QUEUE",
+            "value": {
+              "value": "-7",
+              "original_string": "-7"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_NOT_IN_BATTLEGROUND",
+            "value": {
+              "value": "-8",
+              "original_string": "-8"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_JOIN_XP_GAIN",
+            "value": {
+              "value": "-9",
+              "original_string": "-9"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_JOIN_RANGE_INDEX",
+            "value": {
+              "value": "-10",
+              "original_string": "-10"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_JOIN_TIMED_OUT",
+            "value": {
+              "value": "-11",
+              "original_string": "-11"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_BATTLEGROUND_JOIN_FAILED",
+            "value": {
+              "value": "-12",
+              "original_string": "-12"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_LFG_CANT_USE_BATTLEGROUND",
+            "value": {
+              "value": "-13",
+              "original_string": "-13"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_IN_RANDOM_BG",
+            "value": {
+              "value": "-14",
+              "original_string": "-14"
+            },
+            "tags": {}
+          },
+          {
+            "name": "ERR_IN_NON_RANDOM_BG",
+            "value": {
+              "value": "-15",
+              "original_string": "-15"
+            },
+            "tags": {}
           }
         ],
-        "integer_type": "U32",
+        "integer_type": "I32",
         "tags": {
           "version": {
             "version_type_tag": "world",
@@ -112727,13 +112839,13 @@
         "objects_used_in": [
           {
             "object_name": "SMSG_GROUP_JOINED_BATTLEGROUND",
-            "definer_usage": "RegularUse"
+            "definer_usage": "InIfStatement"
           }
         ],
         "file_info": {
           "file_name": "wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm",
-          "start_position": 54,
-          "end_position": 76
+          "start_position": 59,
+          "end_position": 95
         }
       },
       {
@@ -131980,10 +132092,6 @@
           },
           {
             "object_name": "SMSG_QUEST_QUERY_RESPONSE",
-            "definer_usage": "RegularUse"
-          },
-          {
-            "object_name": "SMSG_SET_FACTION_VISIBLE",
             "definer_usage": "RegularUse"
           }
         ],
@@ -165358,7 +165466,7 @@
         "objects_used_in": [
           {
             "object_name": "SMSG_RAID_INSTANCE_MESSAGE",
-            "definer_usage": "RegularUse"
+            "definer_usage": "InIfStatement"
           }
         ],
         "file_info": {
@@ -502116,41 +502224,25 @@
         },
         "sizes": {
           "constant_sized": true,
-          "minimum_size": 2,
-          "maximum_size": 2
+          "minimum_size": 4,
+          "maximum_size": 4
         },
         "members": [
           {
             "struct_member_tag": "Definition",
             "struct_member_content": {
-              "name": "faction",
+              "name": "reputation_list_id",
               "data_type": {
-                "data_type_tag": "Enum",
-                "type_name": "Faction",
-                "integer_type": "U16",
-                "tags": {
-                  "version": {
-                    "version_type_tag": "world",
-                    "version_type": {
-                      "world_version_tag": "specific",
-                      "versions": [
-                        {
-                          "major": 3,
-                          "minor": 3,
-                          "patch": 5,
-                          "build": null
-                        }
-                      ]
-                    }
-                  }
-                },
-                "upcast": false
+                "data_type_tag": "Integer",
+                "integer_type": "U32"
               },
               "constant_value": null,
               "used_as_size_in": null,
               "size_of_fields_before_size": null,
               "used_in_if": false,
-              "tags": {}
+              "tags": {
+                "comment": "Index into the client's reputation list, not a faction ID."
+              }
             }
           }
         ],
@@ -502170,21 +502262,68 @@
             }
           }
         },
-        "tests": [],
+        "tests": [
+          {
+            "subject": "SMSG_SET_FACTION_VISIBLE",
+            "members": [
+              {
+                "variable_name": "reputation_list_id",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "5",
+                    "original_string": "5"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              6,
+              35,
+              1,
+              5,
+              0,
+              0,
+              0
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/faction/smsg_set_faction_visible.wowm",
+              "start_position": 14,
+              "end_position": 22
+            }
+          }
+        ],
         "file_info": {
           "file_name": "wow_message_parser/wowm/world/faction/smsg_set_faction_visible.wowm",
-          "start_position": 1,
-          "end_position": 5
+          "start_position": 7,
+          "end_position": 12
         },
-        "only_has_io_error": false,
+        "only_has_io_error": true,
         "has_manual_size_field": false,
         "manual_size_subtraction": null,
         "prepared_objects": [
           {
-            "name": "faction",
+            "name": "reputation_list_id",
             "is_elseif_flag": false,
-            "enum_part_of_separate_statements": false,
-            "definer_type": "Enum"
+            "enum_part_of_separate_statements": false
           }
         ],
         "optional": null
@@ -629553,8 +629692,8 @@
         },
         "sizes": {
           "constant_sized": true,
-          "minimum_size": 36,
-          "maximum_size": 36
+          "minimum_size": 32,
+          "maximum_size": 32
         },
         "members": [
           {
@@ -629649,22 +629788,7 @@
           {
             "struct_member_tag": "Definition",
             "struct_member_content": {
-              "name": "new_highest_bid",
-              "data_type": {
-                "data_type_tag": "Integer",
-                "integer_type": "U32"
-              },
-              "constant_value": null,
-              "used_as_size_in": null,
-              "size_of_fields_before_size": null,
-              "used_in_if": false,
-              "tags": {}
-            }
-          },
-          {
-            "struct_member_tag": "Definition",
-            "struct_member_content": {
-              "name": "out_bid_amount",
+              "name": "minimum_increment",
               "data_type": {
                 "data_type_tag": "Integer",
                 "integer_type": "U32"
@@ -629723,11 +629847,153 @@
             }
           }
         },
-        "tests": [],
+        "tests": [
+          {
+            "subject": "SMSG_AUCTION_BIDDER_NOTIFICATION",
+            "members": [
+              {
+                "variable_name": "auction_house",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "1",
+                    "original_string": "STORMWIND"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "auction_id",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "42",
+                    "original_string": "42"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "bidder",
+                "value": {
+                  "test_value_tag": "Guid",
+                  "content": {
+                    "value": "72623859790382856",
+                    "original_string": "0x0102030405060708"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "bid_sum",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "10000",
+                    "original_string": "10000"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "minimum_increment",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "500",
+                    "original_string": "500"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "item_template",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "6948",
+                    "original_string": "6948"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "item_random_property_id",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "0",
+                    "original_string": "0"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              34,
+              94,
+              2,
+              1,
+              0,
+              0,
+              0,
+              42,
+              0,
+              0,
+              0,
+              8,
+              7,
+              6,
+              5,
+              4,
+              3,
+              2,
+              1,
+              16,
+              39,
+              0,
+              0,
+              244,
+              1,
+              0,
+              0,
+              36,
+              27,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/auction/smsg/smsg_auction_bidder_notification.wowm",
+              "start_position": 51,
+              "end_position": 71
+            }
+          }
+        ],
         "file_info": {
           "file_name": "wow_message_parser/wowm/world/auction/smsg/smsg_auction_bidder_notification.wowm",
           "start_position": 39,
-          "end_position": 50
+          "end_position": 49
         },
         "only_has_io_error": false,
         "has_manual_size_field": false,
@@ -629755,12 +630021,7 @@
             "enum_part_of_separate_statements": false
           },
           {
-            "name": "new_highest_bid",
-            "is_elseif_flag": false,
-            "enum_part_of_separate_statements": false
-          },
-          {
-            "name": "out_bid_amount",
+            "name": "minimum_increment",
             "is_elseif_flag": false,
             "enum_part_of_separate_statements": false
           },
@@ -685405,9 +685666,9 @@
           "opcode": 744
         },
         "sizes": {
-          "constant_sized": true,
+          "constant_sized": false,
           "minimum_size": 4,
-          "maximum_size": 4
+          "maximum_size": 12
         },
         "members": [
           {
@@ -685417,7 +685678,7 @@
               "data_type": {
                 "data_type_tag": "Enum",
                 "type_name": "BgTypeId",
-                "integer_type": "U32",
+                "integer_type": "I32",
                 "tags": {
                   "version": {
                     "version_type_tag": "world",
@@ -685439,8 +685700,60 @@
               "constant_value": null,
               "used_as_size_in": null,
               "size_of_fields_before_size": null,
-              "used_in_if": false,
+              "used_in_if": true,
               "tags": {}
+            }
+          },
+          {
+            "struct_member_tag": "IfStatement",
+            "struct_member_content": {
+              "variable_name": "id",
+              "values": [
+                "ERR_BATTLEGROUND_JOIN_TIMED_OUT",
+                "ERR_BATTLEGROUND_JOIN_FAILED"
+              ],
+              "members": [
+                {
+                  "struct_member_tag": "Definition",
+                  "struct_member_content": {
+                    "name": "player",
+                    "data_type": {
+                      "data_type_tag": "Guid"
+                    },
+                    "constant_value": null,
+                    "used_as_size_in": null,
+                    "size_of_fields_before_size": null,
+                    "used_in_if": false,
+                    "tags": {}
+                  }
+                }
+              ],
+              "else_if_statements": [],
+              "original_type": {
+                "data_type_tag": "Enum",
+                "type_name": "BgTypeId",
+                "integer_type": "I32",
+                "tags": {
+                  "version": {
+                    "version_type_tag": "world",
+                    "version_type": {
+                      "world_version_tag": "specific",
+                      "versions": [
+                        {
+                          "major": 3,
+                          "minor": 3,
+                          "patch": 5,
+                          "build": null
+                        }
+                      ]
+                    }
+                  }
+                },
+                "upcast": false
+              },
+              "definer_type": "Enum",
+              "part_of_separate_if_statement": false,
+              "is_else_if_flag": false
             }
           }
         ],
@@ -685460,11 +685773,238 @@
             }
           }
         },
-        "tests": [],
+        "tests": [
+          {
+            "subject": "SMSG_GROUP_JOINED_BATTLEGROUND",
+            "members": [
+              {
+                "variable_name": "id",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "1",
+                    "original_string": "QUEUED_FOR_AV"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              6,
+              232,
+              2,
+              1,
+              0,
+              0,
+              0
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm",
+              "start_position": 97,
+              "end_position": 105
+            }
+          },
+          {
+            "subject": "SMSG_GROUP_JOINED_BATTLEGROUND",
+            "members": [
+              {
+                "variable_name": "id",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "-15",
+                    "original_string": "ERR_IN_NON_RANDOM_BG"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              6,
+              232,
+              2,
+              241,
+              255,
+              255,
+              255
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm",
+              "start_position": 107,
+              "end_position": 115
+            }
+          },
+          {
+            "subject": "SMSG_GROUP_JOINED_BATTLEGROUND",
+            "members": [
+              {
+                "variable_name": "id",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "-11",
+                    "original_string": "ERR_BATTLEGROUND_JOIN_TIMED_OUT"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "player",
+                "value": {
+                  "test_value_tag": "Guid",
+                  "content": {
+                    "value": "72623859790382856",
+                    "original_string": "0x0102030405060708"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              14,
+              232,
+              2,
+              245,
+              255,
+              255,
+              255,
+              8,
+              7,
+              6,
+              5,
+              4,
+              3,
+              2,
+              1
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm",
+              "start_position": 117,
+              "end_position": 127
+            }
+          },
+          {
+            "subject": "SMSG_GROUP_JOINED_BATTLEGROUND",
+            "members": [
+              {
+                "variable_name": "id",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "-12",
+                    "original_string": "ERR_BATTLEGROUND_JOIN_FAILED"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "player",
+                "value": {
+                  "test_value_tag": "Guid",
+                  "content": {
+                    "value": "0",
+                    "original_string": "0"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              14,
+              232,
+              2,
+              244,
+              255,
+              255,
+              255,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm",
+              "start_position": 129,
+              "end_position": 139
+            }
+          }
+        ],
         "file_info": {
           "file_name": "wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm",
           "start_position": 48,
-          "end_position": 52
+          "end_position": 57
         },
         "only_has_io_error": false,
         "has_manual_size_field": false,
@@ -685472,6 +686012,22 @@
         "prepared_objects": [
           {
             "name": "id",
+            "enumerators": {
+              "ERR_BATTLEGROUND_JOIN_FAILED": [
+                {
+                  "name": "player",
+                  "is_elseif_flag": false,
+                  "enum_part_of_separate_statements": false
+                }
+              ],
+              "ERR_BATTLEGROUND_JOIN_TIMED_OUT": [
+                {
+                  "name": "player",
+                  "is_elseif_flag": false,
+                  "enum_part_of_separate_statements": false
+                }
+              ]
+            },
             "is_elseif_flag": false,
             "enum_part_of_separate_statements": false,
             "definer_type": "Enum"
@@ -692544,9 +693100,9 @@
           "opcode": 762
         },
         "sizes": {
-          "constant_sized": true,
+          "constant_sized": false,
           "minimum_size": 16,
-          "maximum_size": 16
+          "maximum_size": 18
         },
         "members": [
           {
@@ -692578,7 +693134,7 @@
               "constant_value": null,
               "used_as_size_in": null,
               "size_of_fields_before_size": null,
-              "used_in_if": false,
+              "used_in_if": true,
               "tags": {}
             }
           },
@@ -692663,6 +693219,73 @@
               "used_in_if": false,
               "tags": {}
             }
+          },
+          {
+            "struct_member_tag": "IfStatement",
+            "struct_member_content": {
+              "variable_name": "message_type",
+              "values": [
+                "WELCOME"
+              ],
+              "members": [
+                {
+                  "struct_member_tag": "Definition",
+                  "struct_member_content": {
+                    "name": "locked",
+                    "data_type": {
+                      "data_type_tag": "Integer",
+                      "integer_type": "U8"
+                    },
+                    "constant_value": null,
+                    "used_as_size_in": null,
+                    "size_of_fields_before_size": null,
+                    "used_in_if": false,
+                    "tags": {}
+                  }
+                },
+                {
+                  "struct_member_tag": "Definition",
+                  "struct_member_content": {
+                    "name": "extended",
+                    "data_type": {
+                      "data_type_tag": "Integer",
+                      "integer_type": "U8"
+                    },
+                    "constant_value": null,
+                    "used_as_size_in": null,
+                    "size_of_fields_before_size": null,
+                    "used_in_if": false,
+                    "tags": {}
+                  }
+                }
+              ],
+              "else_if_statements": [],
+              "original_type": {
+                "data_type_tag": "Enum",
+                "type_name": "RaidInstanceMessage",
+                "integer_type": "U32",
+                "tags": {
+                  "version": {
+                    "version_type_tag": "world",
+                    "version_type": {
+                      "world_version_tag": "specific",
+                      "versions": [
+                        {
+                          "major": 3,
+                          "minor": 3,
+                          "patch": 5,
+                          "build": null
+                        }
+                      ]
+                    }
+                  }
+                },
+                "upcast": false
+              },
+              "definer_type": "Enum",
+              "part_of_separate_if_statement": false,
+              "is_else_if_flag": false
+            }
           }
         ],
         "tags": {
@@ -692681,11 +693304,220 @@
             }
           }
         },
-        "tests": [],
+        "tests": [
+          {
+            "subject": "SMSG_RAID_INSTANCE_MESSAGE",
+            "members": [
+              {
+                "variable_name": "message_type",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "4",
+                    "original_string": "WELCOME"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "map",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "533",
+                    "original_string": "NAXXRAMAS"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "difficulty",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "0",
+                    "original_string": "TEN_MAN_NORMAL"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "time_left",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "7200",
+                    "original_string": "7200"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "locked",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "1",
+                    "original_string": "1"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "extended",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "0",
+                    "original_string": "0"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              20,
+              250,
+              2,
+              4,
+              0,
+              0,
+              0,
+              21,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              32,
+              28,
+              0,
+              0,
+              1,
+              0
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/raid/smsg_raid_instance_message.wowm",
+              "start_position": 51,
+              "end_position": 69
+            }
+          },
+          {
+            "subject": "SMSG_RAID_INSTANCE_MESSAGE",
+            "members": [
+              {
+                "variable_name": "message_type",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "1",
+                    "original_string": "WARNING_HOURS"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "map",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "533",
+                    "original_string": "NAXXRAMAS"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "difficulty",
+                "value": {
+                  "test_value_tag": "Enum",
+                  "content": {
+                    "value": "0",
+                    "original_string": "TEN_MAN_NORMAL"
+                  }
+                },
+                "tags": {}
+              },
+              {
+                "variable_name": "time_left",
+                "value": {
+                  "test_value_tag": "Integer",
+                  "content": {
+                    "value": "3600",
+                    "original_string": "3600"
+                  }
+                },
+                "tags": {}
+              }
+            ],
+            "raw_bytes": [
+              0,
+              18,
+              250,
+              2,
+              1,
+              0,
+              0,
+              0,
+              21,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              16,
+              14,
+              0,
+              0
+            ],
+            "tags": {
+              "version": {
+                "version_type_tag": "world",
+                "version_type": {
+                  "world_version_tag": "specific",
+                  "versions": [
+                    {
+                      "major": 3,
+                      "minor": 3,
+                      "patch": 5,
+                      "build": null
+                    }
+                  ]
+                }
+              }
+            },
+            "file_info": {
+              "file_name": "wow_message_parser/wowm/world/raid/smsg_raid_instance_message.wowm",
+              "start_position": 71,
+              "end_position": 85
+            }
+          }
+        ],
         "file_info": {
           "file_name": "wow_message_parser/wowm/world/raid/smsg_raid_instance_message.wowm",
           "start_position": 37,
-          "end_position": 45
+          "end_position": 49
         },
         "only_has_io_error": false,
         "has_manual_size_field": false,
@@ -692693,6 +693525,20 @@
         "prepared_objects": [
           {
             "name": "message_type",
+            "enumerators": {
+              "WELCOME": [
+                {
+                  "name": "extended",
+                  "is_elseif_flag": false,
+                  "enum_part_of_separate_statements": false
+                },
+                {
+                  "name": "locked",
+                  "is_elseif_flag": false,
+                  "enum_part_of_separate_statements": false
+                }
+              ]
+            },
             "is_elseif_flag": false,
             "enum_part_of_separate_statements": false,
             "definer_type": "Enum"

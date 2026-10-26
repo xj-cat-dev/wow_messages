@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Changed
+
+* BREAKING: Wrath `BgTypeId` now uses `i32` and includes the battleground join error codes. `RemoveFromQueue` is replaced by `ErrGroupJoinBattlegroundDeserters` for result -2.
+
 ### Removed
 
 * BREAKING: `Item`s/`Spell`s for `wow_items` and `wow_spells` crates. These were heavily optimized for storing data and not very useful as general purpose abstractions, such as those found in this crate.

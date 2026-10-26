@@ -41,10 +41,31 @@ smsg SMSG_AUCTION_BIDDER_NOTIFICATION = 0x025E {
     u32 auction_id;
     Guid bidder;
     u32 bid_sum;
-    u32 new_highest_bid;
-    u32 out_bid_amount;
+    u32 minimum_increment;
     u32 item_template;
     u32 item_random_property_id;
 } {
+    versions = "3.3.5";
+}
+
+test SMSG_AUCTION_BIDDER_NOTIFICATION {
+    auction_house = STORMWIND;
+    auction_id = 42;
+    bidder = 0x0102030405060708;
+    bid_sum = 10000;
+    minimum_increment = 500;
+    item_template = 6948;
+    item_random_property_id = 0;
+} [
+    0x00, 0x22, /* size */
+    0x5E, 0x02, /* opcode */
+    0x01, 0x00, 0x00, 0x00, /* auction_house */
+    0x2A, 0x00, 0x00, 0x00, /* auction_id */
+    0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, /* bidder */
+    0x10, 0x27, 0x00, 0x00, /* bid_sum */
+    0xF4, 0x01, 0x00, 0x00, /* minimum_increment */
+    0x24, 0x1B, 0x00, 0x00, /* item_template */
+    0x00, 0x00, 0x00, 0x00, /* item_random_property_id */
+] {
     versions = "3.3.5";
 }

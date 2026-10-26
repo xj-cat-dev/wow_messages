@@ -1,6 +1,6 @@
-/// Auto generated from the original `wowm` in file [`wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm:54`](https://github.com/gtker/wow_messages/tree/main/wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm#L54):
+/// Auto generated from the original `wowm` in file [`wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm:59`](https://github.com/gtker/wow_messages/tree/main/wow_message_parser/wowm/world/social/smsg_group_joined_battleground.wowm#L59):
 /// ```text
-/// enum BgTypeId : u32 {
+/// enum BgTypeId : i32 {
 ///     NOT_ELIGIBLE = 0;
 ///     QUEUED_FOR_AV = 1;
 ///     QUEUED_FOR_WSG = 2;
@@ -14,7 +14,21 @@
 ///     QUEUED_FOR_DALARAN_SEWERS = 10;
 ///     QUEUED_FOR_RING_OF_VALOR = 11;
 ///     QUEUED_FOR_ISLE_OF_CONQUEST = 30;
-///     REMOVE_FROM_QUEUE = 0xFFFFFFFE;
+///     ERR_BATTLEGROUND_NONE = -1;
+///     ERR_GROUP_JOIN_BATTLEGROUND_DESERTERS = -2;
+///     ERR_ARENA_TEAM_PARTY_SIZE = -3;
+///     ERR_BATTLEGROUND_TOO_MANY_QUEUES = -4;
+///     ERR_BATTLEGROUND_CANNOT_QUEUE_FOR_RATED = -5;
+///     ERR_BATTLEGROUND_QUEUED_FOR_RATED = -6;
+///     ERR_BATTLEGROUND_TEAM_LEFT_QUEUE = -7;
+///     ERR_BATTLEGROUND_NOT_IN_BATTLEGROUND = -8;
+///     ERR_BATTLEGROUND_JOIN_XP_GAIN = -9;
+///     ERR_BATTLEGROUND_JOIN_RANGE_INDEX = -10;
+///     ERR_BATTLEGROUND_JOIN_TIMED_OUT = -11;
+///     ERR_BATTLEGROUND_JOIN_FAILED = -12;
+///     ERR_LFG_CANT_USE_BATTLEGROUND = -13;
+///     ERR_IN_RANDOM_BG = -14;
+///     ERR_IN_NON_RANDOM_BG = -15;
 /// }
 /// ```
 #[derive(Debug, Default, PartialEq, Eq, Hash, Ord, PartialOrd, Copy, Clone)]
@@ -38,12 +52,26 @@ pub enum BgTypeId {
     QueuedForDalaranSewers,
     QueuedForRingOfValor,
     QueuedForIsleOfConquest,
-    /// send bg command result to show nice message
-    RemoveFromQueue,
+    /// Do not show a message.
+    ErrBattlegroundNone,
+    ErrGroupJoinBattlegroundDeserters,
+    ErrArenaTeamPartySize,
+    ErrBattlegroundTooManyQueues,
+    ErrBattlegroundCannotQueueForRated,
+    ErrBattlegroundQueuedForRated,
+    ErrBattlegroundTeamLeftQueue,
+    ErrBattlegroundNotInBattleground,
+    ErrBattlegroundJoinXpGain,
+    ErrBattlegroundJoinRangeIndex,
+    ErrBattlegroundJoinTimedOut,
+    ErrBattlegroundJoinFailed,
+    ErrLfgCantUseBattleground,
+    ErrInRandomBg,
+    ErrInNonRandomBg,
 }
 
 impl BgTypeId {
-    pub const fn as_int(&self) -> u32 {
+    pub const fn as_int(&self) -> i32 {
         match self {
             Self::NotEligible => 0x0,
             Self::QueuedForAv => 0x1,
@@ -58,11 +86,25 @@ impl BgTypeId {
             Self::QueuedForDalaranSewers => 0xa,
             Self::QueuedForRingOfValor => 0xb,
             Self::QueuedForIsleOfConquest => 0x1e,
-            Self::RemoveFromQueue => 0xfffffffe,
+            Self::ErrBattlegroundNone => -1,
+            Self::ErrGroupJoinBattlegroundDeserters => -2,
+            Self::ErrArenaTeamPartySize => -3,
+            Self::ErrBattlegroundTooManyQueues => -4,
+            Self::ErrBattlegroundCannotQueueForRated => -5,
+            Self::ErrBattlegroundQueuedForRated => -6,
+            Self::ErrBattlegroundTeamLeftQueue => -7,
+            Self::ErrBattlegroundNotInBattleground => -8,
+            Self::ErrBattlegroundJoinXpGain => -9,
+            Self::ErrBattlegroundJoinRangeIndex => -10,
+            Self::ErrBattlegroundJoinTimedOut => -11,
+            Self::ErrBattlegroundJoinFailed => -12,
+            Self::ErrLfgCantUseBattleground => -13,
+            Self::ErrInRandomBg => -14,
+            Self::ErrInNonRandomBg => -15,
         }
     }
 
-    pub const fn variants() -> [Self; 14] {
+    pub const fn variants() -> [Self; 28] {
         [
             Self::NotEligible,
             Self::QueuedForAv,
@@ -77,11 +119,25 @@ impl BgTypeId {
             Self::QueuedForDalaranSewers,
             Self::QueuedForRingOfValor,
             Self::QueuedForIsleOfConquest,
-            Self::RemoveFromQueue,
+            Self::ErrBattlegroundNone,
+            Self::ErrGroupJoinBattlegroundDeserters,
+            Self::ErrArenaTeamPartySize,
+            Self::ErrBattlegroundTooManyQueues,
+            Self::ErrBattlegroundCannotQueueForRated,
+            Self::ErrBattlegroundQueuedForRated,
+            Self::ErrBattlegroundTeamLeftQueue,
+            Self::ErrBattlegroundNotInBattleground,
+            Self::ErrBattlegroundJoinXpGain,
+            Self::ErrBattlegroundJoinRangeIndex,
+            Self::ErrBattlegroundJoinTimedOut,
+            Self::ErrBattlegroundJoinFailed,
+            Self::ErrLfgCantUseBattleground,
+            Self::ErrInRandomBg,
+            Self::ErrInNonRandomBg,
         ]
     }
 
-    pub const fn from_int(value: u32) -> Result<Self, crate::errors::EnumError> {
+    pub const fn from_int(value: i32) -> Result<Self, crate::errors::EnumError> {
         match value {
             0 => Ok(Self::NotEligible),
             1 => Ok(Self::QueuedForAv),
@@ -96,7 +152,21 @@ impl BgTypeId {
             10 => Ok(Self::QueuedForDalaranSewers),
             11 => Ok(Self::QueuedForRingOfValor),
             30 => Ok(Self::QueuedForIsleOfConquest),
-            4294967294 => Ok(Self::RemoveFromQueue),
+            -1 => Ok(Self::ErrBattlegroundNone),
+            -2 => Ok(Self::ErrGroupJoinBattlegroundDeserters),
+            -3 => Ok(Self::ErrArenaTeamPartySize),
+            -4 => Ok(Self::ErrBattlegroundTooManyQueues),
+            -5 => Ok(Self::ErrBattlegroundCannotQueueForRated),
+            -6 => Ok(Self::ErrBattlegroundQueuedForRated),
+            -7 => Ok(Self::ErrBattlegroundTeamLeftQueue),
+            -8 => Ok(Self::ErrBattlegroundNotInBattleground),
+            -9 => Ok(Self::ErrBattlegroundJoinXpGain),
+            -10 => Ok(Self::ErrBattlegroundJoinRangeIndex),
+            -11 => Ok(Self::ErrBattlegroundJoinTimedOut),
+            -12 => Ok(Self::ErrBattlegroundJoinFailed),
+            -13 => Ok(Self::ErrLfgCantUseBattleground),
+            -14 => Ok(Self::ErrInRandomBg),
+            -15 => Ok(Self::ErrInNonRandomBg),
             v => Err(crate::errors::EnumError::new(NAME, v as i128),)
         }
     }
@@ -119,7 +189,21 @@ impl BgTypeId {
             Self::QueuedForDalaranSewers => "QUEUED_FOR_DALARAN_SEWERS",
             Self::QueuedForRingOfValor => "QUEUED_FOR_RING_OF_VALOR",
             Self::QueuedForIsleOfConquest => "QUEUED_FOR_ISLE_OF_CONQUEST",
-            Self::RemoveFromQueue => "REMOVE_FROM_QUEUE",
+            Self::ErrBattlegroundNone => "ERR_BATTLEGROUND_NONE",
+            Self::ErrGroupJoinBattlegroundDeserters => "ERR_GROUP_JOIN_BATTLEGROUND_DESERTERS",
+            Self::ErrArenaTeamPartySize => "ERR_ARENA_TEAM_PARTY_SIZE",
+            Self::ErrBattlegroundTooManyQueues => "ERR_BATTLEGROUND_TOO_MANY_QUEUES",
+            Self::ErrBattlegroundCannotQueueForRated => "ERR_BATTLEGROUND_CANNOT_QUEUE_FOR_RATED",
+            Self::ErrBattlegroundQueuedForRated => "ERR_BATTLEGROUND_QUEUED_FOR_RATED",
+            Self::ErrBattlegroundTeamLeftQueue => "ERR_BATTLEGROUND_TEAM_LEFT_QUEUE",
+            Self::ErrBattlegroundNotInBattleground => "ERR_BATTLEGROUND_NOT_IN_BATTLEGROUND",
+            Self::ErrBattlegroundJoinXpGain => "ERR_BATTLEGROUND_JOIN_XP_GAIN",
+            Self::ErrBattlegroundJoinRangeIndex => "ERR_BATTLEGROUND_JOIN_RANGE_INDEX",
+            Self::ErrBattlegroundJoinTimedOut => "ERR_BATTLEGROUND_JOIN_TIMED_OUT",
+            Self::ErrBattlegroundJoinFailed => "ERR_BATTLEGROUND_JOIN_FAILED",
+            Self::ErrLfgCantUseBattleground => "ERR_LFG_CANT_USE_BATTLEGROUND",
+            Self::ErrInRandomBg => "ERR_IN_RANDOM_BG",
+            Self::ErrInNonRandomBg => "ERR_IN_NON_RANDOM_BG",
         }
     }
 
@@ -143,14 +227,28 @@ impl std::fmt::Display for BgTypeId {
             Self::QueuedForDalaranSewers => "QueuedForDalaranSewers",
             Self::QueuedForRingOfValor => "QueuedForRingOfValor",
             Self::QueuedForIsleOfConquest => "QueuedForIsleOfConquest",
-            Self::RemoveFromQueue => "RemoveFromQueue",
+            Self::ErrBattlegroundNone => "ErrBattlegroundNone",
+            Self::ErrGroupJoinBattlegroundDeserters => "ErrGroupJoinBattlegroundDeserters",
+            Self::ErrArenaTeamPartySize => "ErrArenaTeamPartySize",
+            Self::ErrBattlegroundTooManyQueues => "ErrBattlegroundTooManyQueues",
+            Self::ErrBattlegroundCannotQueueForRated => "ErrBattlegroundCannotQueueForRated",
+            Self::ErrBattlegroundQueuedForRated => "ErrBattlegroundQueuedForRated",
+            Self::ErrBattlegroundTeamLeftQueue => "ErrBattlegroundTeamLeftQueue",
+            Self::ErrBattlegroundNotInBattleground => "ErrBattlegroundNotInBattleground",
+            Self::ErrBattlegroundJoinXpGain => "ErrBattlegroundJoinXpGain",
+            Self::ErrBattlegroundJoinRangeIndex => "ErrBattlegroundJoinRangeIndex",
+            Self::ErrBattlegroundJoinTimedOut => "ErrBattlegroundJoinTimedOut",
+            Self::ErrBattlegroundJoinFailed => "ErrBattlegroundJoinFailed",
+            Self::ErrLfgCantUseBattleground => "ErrLfgCantUseBattleground",
+            Self::ErrInRandomBg => "ErrInRandomBg",
+            Self::ErrInNonRandomBg => "ErrInNonRandomBg",
         })
     }
 }
 
-impl TryFrom<u32> for BgTypeId {
+impl TryFrom<i32> for BgTypeId {
     type Error = crate::errors::EnumError;
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
         Self::from_int(value)
     }
 }
@@ -158,21 +256,33 @@ impl TryFrom<u32> for BgTypeId {
 impl TryFrom<u8> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: u8) -> Result<Self, Self::Error> {
-        Self::from_int(value.into())
+        TryInto::<i32>::try_into(value)
+            .map_err(|_| crate::errors::EnumError::new(NAME, value.into()))?
+            .try_into()
     }
 }
 
 impl TryFrom<u16> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: u16) -> Result<Self, Self::Error> {
-        Self::from_int(value.into())
+        TryInto::<i32>::try_into(value)
+            .map_err(|_| crate::errors::EnumError::new(NAME, value.into()))?
+            .try_into()
+    }
+}
+
+impl TryFrom<u32> for BgTypeId {
+    type Error = crate::errors::EnumError;
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        let v = i32::from_le_bytes(value.to_le_bytes());
+        Self::from_int(v)
     }
 }
 
 impl TryFrom<u64> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: u64) -> Result<Self, Self::Error> {
-        TryInto::<u32>::try_into(value)
+        TryInto::<i32>::try_into(value)
             .map_err(|_| crate::errors::EnumError::new(NAME, value.into()))?
             .try_into()
     }
@@ -181,33 +291,21 @@ impl TryFrom<u64> for BgTypeId {
 impl TryFrom<i8> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: i8) -> Result<Self, Self::Error> {
-        TryInto::<u32>::try_into(value)
-            .map_err(|_| crate::errors::EnumError::new(NAME, value.into()))?
-            .try_into()
+        Self::from_int(value.into())
     }
 }
 
 impl TryFrom<i16> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: i16) -> Result<Self, Self::Error> {
-        TryInto::<u32>::try_into(value)
-            .map_err(|_| crate::errors::EnumError::new(NAME, value.into()))?
-            .try_into()
-    }
-}
-
-impl TryFrom<i32> for BgTypeId {
-    type Error = crate::errors::EnumError;
-    fn try_from(value: i32) -> Result<Self, Self::Error> {
-        let v = u32::from_le_bytes(value.to_le_bytes());
-        Self::from_int(v)
+        Self::from_int(value.into())
     }
 }
 
 impl TryFrom<i64> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: i64) -> Result<Self, Self::Error> {
-        TryInto::<u32>::try_into(value)
+        TryInto::<i32>::try_into(value)
             .map_err(|_| crate::errors::EnumError::new(NAME, value.into()))?
             .try_into()
     }
@@ -216,7 +314,7 @@ impl TryFrom<i64> for BgTypeId {
 impl TryFrom<usize> for BgTypeId {
     type Error = crate::errors::EnumError;
     fn try_from(value: usize) -> Result<Self, Self::Error> {
-        TryInto::<u32>::try_into(value)
+        TryInto::<i32>::try_into(value)
             .map_err(|_| crate::errors::EnumError::new(NAME, value as i128))?
             .try_into()
     }

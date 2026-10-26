@@ -47,11 +47,16 @@ smsg SMSG_GROUP_JOINED_BATTLEGROUND = 0x02E8 {
 
 smsg SMSG_GROUP_JOINED_BATTLEGROUND = 0x02E8 {
     BgTypeId id;
+    if (id == ERR_BATTLEGROUND_JOIN_TIMED_OUT
+     || id == ERR_BATTLEGROUND_JOIN_FAILED)
+    {
+        Guid player;
+    }
 } {
     versions = "3.3.5";
 }
 
-enum BgTypeId : u32 {
+enum BgTypeId : i32 {
     /// Your group has joined a battleground queue, but you are not eligible
     NOT_ELIGIBLE = 0;
     /// Your group has joined the queue for AV
@@ -69,8 +74,66 @@ enum BgTypeId : u32 {
     QUEUED_FOR_DALARAN_SEWERS = 10;
     QUEUED_FOR_RING_OF_VALOR = 11;
     QUEUED_FOR_ISLE_OF_CONQUEST = 30;
-    /// send bg command result to show nice message
-    REMOVE_FROM_QUEUE = 0xFFFFFFFE;
+    /// Do not show a message.
+    ERR_BATTLEGROUND_NONE = -1;
+    ERR_GROUP_JOIN_BATTLEGROUND_DESERTERS = -2;
+    ERR_ARENA_TEAM_PARTY_SIZE = -3;
+    ERR_BATTLEGROUND_TOO_MANY_QUEUES = -4;
+    ERR_BATTLEGROUND_CANNOT_QUEUE_FOR_RATED = -5;
+    ERR_BATTLEGROUND_QUEUED_FOR_RATED = -6;
+    ERR_BATTLEGROUND_TEAM_LEFT_QUEUE = -7;
+    ERR_BATTLEGROUND_NOT_IN_BATTLEGROUND = -8;
+    ERR_BATTLEGROUND_JOIN_XP_GAIN = -9;
+    ERR_BATTLEGROUND_JOIN_RANGE_INDEX = -10;
+    ERR_BATTLEGROUND_JOIN_TIMED_OUT = -11;
+    ERR_BATTLEGROUND_JOIN_FAILED = -12;
+    ERR_LFG_CANT_USE_BATTLEGROUND = -13;
+    ERR_IN_RANDOM_BG = -14;
+    ERR_IN_NON_RANDOM_BG = -15;
 } {
+    versions = "3.3.5";
+}
+
+test SMSG_GROUP_JOINED_BATTLEGROUND {
+    id = QUEUED_FOR_AV;
+} [
+    0x00, 0x06, /* size */
+    0xE8, 0x02, /* opcode */
+    0x01, 0x00, 0x00, 0x00, /* id: QUEUED_FOR_AV */
+] {
+    versions = "3.3.5";
+}
+
+test SMSG_GROUP_JOINED_BATTLEGROUND {
+    id = ERR_IN_NON_RANDOM_BG;
+} [
+    0x00, 0x06, /* size */
+    0xE8, 0x02, /* opcode */
+    0xF1, 0xFF, 0xFF, 0xFF, /* id: -15 */
+] {
+    versions = "3.3.5";
+}
+
+test SMSG_GROUP_JOINED_BATTLEGROUND {
+    id = ERR_BATTLEGROUND_JOIN_TIMED_OUT;
+    player = 0x0102030405060708;
+} [
+    0x00, 0x0E, /* size */
+    0xE8, 0x02, /* opcode */
+    0xF5, 0xFF, 0xFF, 0xFF, /* id: -11 */
+    0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, /* player */
+] {
+    versions = "3.3.5";
+}
+
+test SMSG_GROUP_JOINED_BATTLEGROUND {
+    id = ERR_BATTLEGROUND_JOIN_FAILED;
+    player = 0;
+} [
+    0x00, 0x0E, /* size */
+    0xE8, 0x02, /* opcode */
+    0xF4, 0xFF, 0xFF, 0xFF, /* id: -12 */
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* player */
+] {
     versions = "3.3.5";
 }

@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Changed
+
+* BREAKING: Wrath `SMSG_SET_FACTION_VISIBLE` now carries a `u32` reputation list index instead of a `Faction`.
+* BREAKING: Wrath `SMSG_AUCTION_BIDDER_NOTIFICATION` now has a 32-byte body, removes `out_bid_amount`, and renames `new_highest_bid` to `minimum_increment`.
+* BREAKING: Wrath `SMSG_RAID_INSTANCE_MESSAGE` now carries `locked` and `extended` bytes for `WELCOME` messages.
+* BREAKING: Wrath `SMSG_GROUP_JOINED_BATTLEGROUND` now supports signed error results and includes a player GUID for join failures and timeouts.
+
 
 ## [0.3.0] - 2024-10-10
 

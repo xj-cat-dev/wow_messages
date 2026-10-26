@@ -40,6 +40,46 @@ smsg SMSG_RAID_INSTANCE_MESSAGE = 0x02FA {
     (u32)RaidDifficulty difficulty;
     /* TODO NARROW_TYPE: unit? */
     u32 time_left;
+    if (message_type == WELCOME) {
+        u8 locked;
+        u8 extended;
+    }
 } {
+    versions = "3.3.5";
+}
+
+test SMSG_RAID_INSTANCE_MESSAGE {
+    message_type = WELCOME;
+    map = NAXXRAMAS;
+    difficulty = TEN_MAN_NORMAL;
+    time_left = 7200;
+    locked = 1;
+    extended = 0;
+} [
+    0x00, 0x14, /* size */
+    0xFA, 0x02, /* opcode */
+    0x04, 0x00, 0x00, 0x00, /* message_type: WELCOME */
+    0x15, 0x02, 0x00, 0x00, /* map: NAXXRAMAS */
+    0x00, 0x00, 0x00, 0x00, /* difficulty */
+    0x20, 0x1C, 0x00, 0x00, /* time_left */
+    0x01, /* locked */
+    0x00, /* extended */
+] {
+    versions = "3.3.5";
+}
+
+test SMSG_RAID_INSTANCE_MESSAGE {
+    message_type = WARNING_HOURS;
+    map = NAXXRAMAS;
+    difficulty = TEN_MAN_NORMAL;
+    time_left = 3600;
+} [
+    0x00, 0x12, /* size */
+    0xFA, 0x02, /* opcode */
+    0x01, 0x00, 0x00, 0x00, /* message_type: WARNING_HOURS */
+    0x15, 0x02, 0x00, 0x00, /* map: NAXXRAMAS */
+    0x00, 0x00, 0x00, 0x00, /* difficulty */
+    0x10, 0x0E, 0x00, 0x00, /* time_left */
+] {
     versions = "3.3.5";
 }

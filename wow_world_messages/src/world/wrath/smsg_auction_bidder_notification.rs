@@ -10,8 +10,7 @@ use crate::wrath::AuctionHouse;
 ///     u32 auction_id;
 ///     Guid bidder;
 ///     u32 bid_sum;
-///     u32 new_highest_bid;
-///     u32 out_bid_amount;
+///     u32 minimum_increment;
 ///     u32 item_template;
 ///     u32 item_random_property_id;
 /// }
@@ -22,8 +21,7 @@ pub struct SMSG_AUCTION_BIDDER_NOTIFICATION {
     pub auction_id: u32,
     pub bidder: Guid,
     pub bid_sum: u32,
-    pub new_highest_bid: u32,
-    pub out_bid_amount: u32,
+    pub minimum_increment: u32,
     pub item_template: u32,
     pub item_random_property_id: u32,
 }
@@ -31,7 +29,7 @@ pub struct SMSG_AUCTION_BIDDER_NOTIFICATION {
 impl crate::private::Sealed for SMSG_AUCTION_BIDDER_NOTIFICATION {}
 impl SMSG_AUCTION_BIDDER_NOTIFICATION {
     fn read_inner(mut r: &mut &[u8], body_size: u32) -> Result<Self, crate::errors::ParseErrorKind> {
-        if body_size != 36 {
+        if body_size != 32 {
             return Err(crate::errors::ParseErrorKind::InvalidSize);
         }
 
@@ -47,11 +45,8 @@ impl SMSG_AUCTION_BIDDER_NOTIFICATION {
         // bid_sum: u32
         let bid_sum = crate::util::read_u32_le(&mut r)?;
 
-        // new_highest_bid: u32
-        let new_highest_bid = crate::util::read_u32_le(&mut r)?;
-
-        // out_bid_amount: u32
-        let out_bid_amount = crate::util::read_u32_le(&mut r)?;
+        // minimum_increment: u32
+        let minimum_increment = crate::util::read_u32_le(&mut r)?;
 
         // item_template: u32
         let item_template = crate::util::read_u32_le(&mut r)?;
@@ -64,8 +59,7 @@ impl SMSG_AUCTION_BIDDER_NOTIFICATION {
             auction_id,
             bidder,
             bid_sum,
-            new_highest_bid,
-            out_bid_amount,
+            minimum_increment,
             item_template,
             item_random_property_id,
         })
@@ -81,53 +75,8 @@ impl crate::Message for SMSG_AUCTION_BIDDER_NOTIFICATION {
         "SMSG_AUCTION_BIDDER_NOTIFICATION"
     }
 
-    #[cfg(feature = "print-testcase")]
-    fn to_test_case_string(&self) -> Option<String> {
-        use std::fmt::Write;
-        use crate::traits::Message;
-
-        let mut s = String::new();
-
-        writeln!(s, "test SMSG_AUCTION_BIDDER_NOTIFICATION {{").unwrap();
-        // Members
-        writeln!(s, "    auction_house = {};", self.auction_house.as_test_case_value()).unwrap();
-        writeln!(s, "    auction_id = {};", self.auction_id).unwrap();
-        writeln!(s, "    bidder = {};", self.bidder.guid()).unwrap();
-        writeln!(s, "    bid_sum = {};", self.bid_sum).unwrap();
-        writeln!(s, "    new_highest_bid = {};", self.new_highest_bid).unwrap();
-        writeln!(s, "    out_bid_amount = {};", self.out_bid_amount).unwrap();
-        writeln!(s, "    item_template = {};", self.item_template).unwrap();
-        writeln!(s, "    item_random_property_id = {};", self.item_random_property_id).unwrap();
-
-        writeln!(s, "}} [").unwrap();
-
-        let [a, b] = 38_u16.to_be_bytes();
-        writeln!(s, "    {a:#04X}, {b:#04X}, /* size */").unwrap();
-        let [a, b] = 606_u16.to_le_bytes();
-        writeln!(s, "    {a:#04X}, {b:#04X}, /* opcode */").unwrap();
-        let mut bytes: Vec<u8> = Vec::new();
-        self.write_into_vec(&mut bytes).unwrap();
-        let mut bytes = bytes.into_iter();
-
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "auction_house", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "auction_id", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 8, "bidder", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "bid_sum", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "new_highest_bid", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "out_bid_amount", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "item_template", "    ");
-        crate::util::write_bytes(&mut s, &mut bytes, 4, "item_random_property_id", "    ");
-
-
-        writeln!(s, "] {{").unwrap();
-        writeln!(s, "    versions = \"{}\";", std::env::var("WOWM_TEST_CASE_WORLD_VERSION").unwrap_or("3.3.5".to_string())).unwrap();
-        writeln!(s, "}}\n").unwrap();
-
-        Some(s)
-    }
-
     fn size_without_header(&self) -> u32 {
-        36
+        32
     }
 
     fn write_into_vec(&self, mut w: impl Write) -> Result<(), std::io::Error> {
@@ -143,11 +92,8 @@ impl crate::Message for SMSG_AUCTION_BIDDER_NOTIFICATION {
         // bid_sum: u32
         w.write_all(&self.bid_sum.to_le_bytes())?;
 
-        // new_highest_bid: u32
-        w.write_all(&self.new_highest_bid.to_le_bytes())?;
-
-        // out_bid_amount: u32
-        w.write_all(&self.out_bid_amount.to_le_bytes())?;
+        // minimum_increment: u32
+        w.write_all(&self.minimum_increment.to_le_bytes())?;
 
         // item_template: u32
         w.write_all(&self.item_template.to_le_bytes())?;
@@ -166,4 +112,95 @@ impl crate::Message for SMSG_AUCTION_BIDDER_NOTIFICATION {
 
 #[cfg(feature = "wrath")]
 impl crate::wrath::ServerMessage for SMSG_AUCTION_BIDDER_NOTIFICATION {}
+
+#[cfg(test)]
+mod test {
+    #![allow(clippy::missing_const_for_fn)]
+    use super::SMSG_AUCTION_BIDDER_NOTIFICATION;
+    use super::*;
+    use super::super::*;
+    use crate::wrath::opcodes::ServerOpcodeMessage;
+    use crate::Guid;
+    use crate::wrath::{ClientMessage, ServerMessage};
+
+    const HEADER_SIZE: usize = 2 + 2;
+    const RAW0: [u8; 36] = [ 0x00, 0x22, 0x5E, 0x02, 0x01, 0x00, 0x00, 0x00, 0x2A,
+         0x00, 0x00, 0x00, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x10,
+         0x27, 0x00, 0x00, 0xF4, 0x01, 0x00, 0x00, 0x24, 0x1B, 0x00, 0x00, 0x00,
+         0x00, 0x00, 0x00, ];
+
+    pub(crate) fn expected0() -> SMSG_AUCTION_BIDDER_NOTIFICATION {
+        SMSG_AUCTION_BIDDER_NOTIFICATION {
+            auction_house: AuctionHouse::Stormwind,
+            auction_id: 0x2A,
+            bidder: Guid::new(0x102030405060708),
+            bid_sum: 0x2710,
+            minimum_increment: 0x1F4,
+            item_template: 0x1B24,
+            item_random_property_id: 0x0,
+        }
+
+    }
+
+    // Generated from `wow_message_parser/wowm/world/auction/smsg/smsg_auction_bidder_notification.wowm` line 51.
+    #[cfg(feature = "sync")]
+    #[cfg_attr(feature = "sync", test)]
+    fn smsg_auction_bidder_notification0() {
+        let expected = expected0();
+        let t = ServerOpcodeMessage::read_unencrypted(&mut std::io::Cursor::new(&RAW0)).unwrap();
+        let t = match t {
+            ServerOpcodeMessage::SMSG_AUCTION_BIDDER_NOTIFICATION(t) => t,
+            opcode => panic!("incorrect opcode. Expected SMSG_AUCTION_BIDDER_NOTIFICATION, got {opcode:#?}"),
+        };
+
+        assert_eq!(t.as_ref(), &expected);
+        assert_eq!(32 + HEADER_SIZE, RAW0.len());
+
+        let mut dest = Vec::with_capacity(RAW0.len());
+        expected.write_unencrypted_server(&mut std::io::Cursor::new(&mut dest)).unwrap();
+
+        assert_eq!(dest, RAW0);
+    }
+
+    // Generated from `wow_message_parser/wowm/world/auction/smsg/smsg_auction_bidder_notification.wowm` line 51.
+    #[cfg(feature = "tokio")]
+    #[cfg_attr(feature = "tokio", tokio::test)]
+    async fn tokio_smsg_auction_bidder_notification0() {
+        let expected = expected0();
+        let t = ServerOpcodeMessage::tokio_read_unencrypted(&mut std::io::Cursor::new(&RAW0)).await.unwrap();
+        let t = match t {
+            ServerOpcodeMessage::SMSG_AUCTION_BIDDER_NOTIFICATION(t) => t,
+            opcode => panic!("incorrect opcode. Expected SMSG_AUCTION_BIDDER_NOTIFICATION, got {opcode:#?}"),
+        };
+
+        assert_eq!(t.as_ref(), &expected);
+        assert_eq!(32 + HEADER_SIZE, RAW0.len());
+
+        let mut dest = Vec::with_capacity(RAW0.len());
+        expected.tokio_write_unencrypted_server(&mut std::io::Cursor::new(&mut dest)).await.unwrap();
+
+        assert_eq!(dest, RAW0);
+    }
+
+    // Generated from `wow_message_parser/wowm/world/auction/smsg/smsg_auction_bidder_notification.wowm` line 51.
+    #[cfg(feature = "async-std")]
+    #[cfg_attr(feature = "async-std", async_std::test)]
+    async fn astd_smsg_auction_bidder_notification0() {
+        let expected = expected0();
+        let t = ServerOpcodeMessage::astd_read_unencrypted(&mut async_std::io::Cursor::new(&RAW0)).await.unwrap();
+        let t = match t {
+            ServerOpcodeMessage::SMSG_AUCTION_BIDDER_NOTIFICATION(t) => t,
+            opcode => panic!("incorrect opcode. Expected SMSG_AUCTION_BIDDER_NOTIFICATION, got {opcode:#?}"),
+        };
+
+        assert_eq!(t.as_ref(), &expected);
+        assert_eq!(32 + HEADER_SIZE, RAW0.len());
+
+        let mut dest = Vec::with_capacity(RAW0.len());
+        expected.astd_write_unencrypted_server(&mut async_std::io::Cursor::new(&mut dest)).await.unwrap();
+
+        assert_eq!(dest, RAW0);
+    }
+
+}
 

@@ -73,6 +73,10 @@ smsg SMSG_RAID_INSTANCE_MESSAGE = 0x02FA {
     Map map;
     (u32)RaidDifficulty difficulty;
     u32 time_left;
+    if (message_type == WELCOME) {
+        u8 locked;
+        u8 extended;
+    }
 }
 ```
 ### Header
@@ -83,15 +87,46 @@ SMSG have a header of 4 bytes.
 
 | Offset | Size / Endianness | Type   | Name   | Description |
 | ------ | ----------------- | ------ | ------ | ----------- |
-| 0x00   | 2 / Big           | uint16 | size   | Size of the rest of the message including the opcode field but not including the size field.|
-| 0x02   | 2 / Little        | uint16 | opcode | Opcode that determines which fields the message contains.|
+| 0x00   | 2 **OR** 3 / Big           | uint16 **OR** uint16+uint8 | size | Size of the rest of the message including the opcode field but not including the size field. Wrath server messages **can** be 3 bytes. If the first (most significant) size byte has `0x80` set, the header will be 3 bytes, otherwise it is 2.|
+| -      | 2 / Little| uint16 | opcode | Opcode that determines which fields the message contains. |
 
 ### Body
 
 | Offset | Size / Endianness | Type | Name | Comment |
 | ------ | ----------------- | ---- | ---- | ------- |
-| 0x04 | 4 / - | [RaidInstanceMessage](raidinstancemessage.md) | message_type |  |
-| 0x08 | 4 / - | [Map](map.md) | map |  |
-| 0x0C | 4 / - | [RaidDifficulty](raiddifficulty.md) | difficulty |  |
-| 0x10 | 4 / Little | u32 | time_left |  |
+| - | 4 / - | [RaidInstanceMessage](raidinstancemessage.md) | message_type |  |
+| - | 4 / - | [Map](map.md) | map |  |
+| - | 4 / - | [RaidDifficulty](raiddifficulty.md) | difficulty |  |
+| - | 4 / Little | u32 | time_left |  |
 
+If message_type is equal to `WELCOME`:
+
+| Offset | Size / Endianness | Type | Name | Comment |
+| ------ | ----------------- | ---- | ---- | ------- |
+| - | 1 / - | u8 | locked |  |
+| - | 1 / - | u8 | extended |  |
+
+### Examples
+
+#### Example 1
+
+```c
+0, 20, // size
+250, 2, // opcode (762)
+4, 0, 0, 0, // message_type: RaidInstanceMessage WELCOME (4)
+21, 2, 0, 0, // map: Map NAXXRAMAS (533)
+0, 0, 0, 0, // difficulty: RaidDifficulty TEN_MAN_NORMAL (0)
+32, 28, 0, 0, // time_left: u32
+1, // locked: u8
+0, // extended: u8
+```
+#### Example 2
+
+```c
+0, 18, // size
+250, 2, // opcode (762)
+1, 0, 0, 0, // message_type: RaidInstanceMessage WARNING_HOURS (1)
+21, 2, 0, 0, // map: Map NAXXRAMAS (533)
+0, 0, 0, 0, // difficulty: RaidDifficulty TEN_MAN_NORMAL (0)
+16, 14, 0, 0, // time_left: u32
+```
